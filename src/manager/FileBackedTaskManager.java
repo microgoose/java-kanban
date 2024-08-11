@@ -10,7 +10,7 @@ import model.TaskTypes;
 import java.io.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    protected String CSV_TABLE_HEAD = "id,type,name,status,description,epic";
+    protected String csvTableHead = "id,type,name,status,description,epic";
     protected final File file;
 
     public FileBackedTaskManager(File file) {
@@ -19,7 +19,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public String getCsvTableHead() {
-        return CSV_TABLE_HEAD;
+        return csvTableHead;
     }
 
     public void loadFromFile(File file) {
@@ -37,7 +37,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String csvTableHead = br.readLine();
 
-            if (!csvTableHead.equals(CSV_TABLE_HEAD))
+            if (!csvTableHead.equals(this.csvTableHead))
                 throw new IOException("Файл содержит недопустимые столбы таблицы!");
 
             while (br.ready()) {
@@ -64,7 +64,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public void save() {
         try (FileWriter fw = new FileWriter(file)) {
-            fw.write(CSV_TABLE_HEAD);
+            fw.write(csvTableHead);
             fw.append("\n");
 
             for (Task task : getAllTasks()) {
