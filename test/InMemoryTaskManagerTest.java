@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
     InMemoryTaskManager tm = new InMemoryTaskManager();
-    static Integer id = 0;
+    Integer id = 0;
 
     private int nextId() {
         return id++;
