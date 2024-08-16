@@ -68,18 +68,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             fw.append("\n");
 
             for (Task task : getAllTasks()) {
-                fw.append(task.toString());
-                fw.append("\n");
+                fw.append(task.toString()).append("\n");
             }
 
             for (Subtask subtask : getAllSubtasks()) {
-                fw.append(subtask.toString());
-                fw.append("\n");
+                fw.append(subtask.toString()).append("\n");
             }
 
             for (Epic epic : getAllEpic()) {
-                fw.append(epic.toString());
-                fw.append("\n");
+                fw.append(epic.toString()).append("\n");
             }
         } catch (Exception e) {
             throw new ManagerSaveException(e);
