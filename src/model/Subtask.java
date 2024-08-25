@@ -78,13 +78,13 @@ public class Subtask extends Task {
             throw new IllegalArgumentException("Неккоректный формат строки-подзадчи");
 
         return new Subtask(
-            Integer.parseInt(parts[0]),
-            parts[2],
-            parts[4],
-            TaskStatus.valueOf(parts[3]),
-            parts[5].equals("null")? null : LocalDateTime.parse(parts[5], formatter),
-            parts[6].equals("null")? null : Duration.ofMinutes(Long.parseLong(parts[6])),
-            parts[7].equals("null")? null : Integer.parseInt(parts[7])
+                Integer.parseInt(parts[0]),
+                parts[2],
+                parts[4],
+                TaskStatus.valueOf(parts[3]),
+                parts[5].equals("null")? null : LocalDateTime.parse(parts[5], formatter),
+                parts[6].equals("null")? null : Duration.ofMinutes(Long.parseLong(parts[6])),
+                parts[7].equals("null")? null : Integer.parseInt(parts[7])
         );
     }
 }
