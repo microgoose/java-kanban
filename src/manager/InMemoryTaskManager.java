@@ -272,7 +272,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     protected void updateEpicState(Epic epic) {
-        epic.setStatus(TaskStatus.NEW);
+        TaskStatus epicStatus = null;
 
         //for длинный, так читабильнее
         for (Subtask subtask : getEpicSubtasks(epic.getId())) {
@@ -293,16 +293,33 @@ public class InMemoryTaskManager implements TaskManager {
                 }
             }
 
-            if (epic.getStatus() != TaskStatus.IN_PROGRESS) {
+            if (epicStatus != TaskStatus.IN_PROGRESS && epicStatus != subtask.getStatus()) {
                 switch (subtask.getStatus()) {
+                    case NEW:
+                        if (epicStatus == null) {
+                            epicStatus = TaskStatus.NEW;
+                        } else {
+                            epicStatus = TaskStatus.IN_PROGRESS;
+                        }
+
+                        break;
                     case IN_PROGRESS:
-                        epic.setStatus(TaskStatus.IN_PROGRESS);
+                        epicStatus = TaskStatus.IN_PROGRESS;
                         break;
                     case DONE:
-                        epic.setStatus(TaskStatus.DONE);
+                        if (epicStatus == null) {
+                            epicStatus = TaskStatus.DONE;
+                        } else {
+                            epicStatus = TaskStatus.IN_PROGRESS;
+                        }
+
                         break;
                 }
             }
+        }
+
+        if (epicStatus != null) {
+            epic.setStatus(epicStatus);
         }
 
         if (epic.getStartTime() != null && epic.getEndTime() != null) {

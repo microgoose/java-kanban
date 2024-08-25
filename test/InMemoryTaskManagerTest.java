@@ -114,14 +114,25 @@ class InMemoryTaskManagerTest {
     @Test
     public void mustUpdateEpicStatusAfterSubtaskAdded() {
         Epic epic = new Epic(nextId(), "Эпик", "Описание");
-        Subtask subtask = new Subtask(nextId(), "Подзадача", "Описание", TaskStatus.IN_PROGRESS, epic.getId());
-        Subtask subtask1 = new Subtask(nextId(), "Подзадача", "Описание", TaskStatus.DONE, epic.getId());
+        Subtask subtask = new Subtask(nextId(), "Подзадача", "Описание", epic.getId());
+        Subtask subtask1 = new Subtask(nextId(), "Подзадача", "Описание", epic.getId());
 
         tm.addEpic(epic);
         tm.addSubtask(subtask);
         tm.addSubtask(subtask1);
+        assertEquals(TaskStatus.NEW, epic.getStatus());
 
-        assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus(), "Эпик имеет некоректный статус");
+        subtask.setStatus(TaskStatus.IN_PROGRESS);
+        tm.updateSubtask(subtask);
+        assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus());
+
+        subtask.setStatus(TaskStatus.DONE);
+        tm.updateSubtask(subtask);
+        assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus());
+
+        subtask1.setStatus(TaskStatus.DONE);
+        tm.updateSubtask(subtask1);
+        assertEquals(TaskStatus.DONE, epic.getStatus());
     }
 
     @Test
