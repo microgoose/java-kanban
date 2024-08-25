@@ -1,4 +1,3 @@
-import common.Config;
 import manager.InMemoryTaskManager;
 import model.Epic;
 import model.Subtask;
@@ -8,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -179,5 +178,51 @@ class InMemoryTaskManagerTest {
             tm.addSubtask(subtask);
             tm.addSubtask(subtask1);
         }, "Отсутствует ошибка о пересечении интервалов времени выполнения задач");
+    }
+
+    @Test
+    public void shouldReturnSortedByTimePriority() {
+        Duration duration10min = Duration.ofMinutes(10);
+        Duration startTimeStep = Duration.ofMinutes(20);
+        LocalDateTime startTime = LocalDateTime.of(1, 1, 1, 1, 0);
+
+        Subtask subtaskWithoutTime = new Subtask(nextId(), "Подзадача", "Описание");
+
+        Task task = new Task(nextId(), "Задача", "Описание");
+        task.setStartTime(startTime);
+        task.setDuration(duration10min);
+
+        startTime = startTime.plus(startTimeStep);
+        Task task1 = new Task(nextId(), "Задача", "Описание");
+        task1.setStartTime(startTime);
+        task1.setDuration(duration10min);
+
+        startTime = startTime.plus(startTimeStep);
+        Subtask subtask = new Subtask(nextId(), "Подзадача", "Описание");
+        subtask.setStartTime(startTime);
+        subtask.setDuration(duration10min);
+
+        startTime = startTime.plus(startTimeStep);
+        Subtask subtask2 = new Subtask(nextId(), "Подзадача", "Описание");
+        subtask2.setStartTime(startTime);
+        subtask2.setDuration(duration10min);
+
+        tm.addTask(subtaskWithoutTime);
+        tm.addTask(task);
+        tm.addSubtask(subtask2);
+        tm.addTask(task1);
+        tm.addSubtask(subtask);
+
+        List<Task> sortedTasks = tm.getPrioritizedTasks();
+
+        if (sortedTasks.isEmpty() || sortedTasks.size() == 1)
+            return;
+
+        for (int i = 1; i < sortedTasks.size(); i++) {
+            LocalDateTime prevStartTime = sortedTasks.get(i - 1).getStartTime();
+            LocalDateTime currStartTime = sortedTasks.get(i).getStartTime();
+
+            assertTrue(prevStartTime.isBefore(currStartTime), "Список неккоректно отсортирован по времени начала задач");
+        }
     }
 }
