@@ -10,7 +10,7 @@ import model.TaskTypes;
 import java.io.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    protected String csvTableHead = "id,type,name,status,description,epic";
+    protected String csvTableHead = "id, type, name, status, description, startTime, duration, epic";
     protected final File file;
 
     public FileBackedTaskManager(File file) {

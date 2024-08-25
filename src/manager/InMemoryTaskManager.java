@@ -7,6 +7,8 @@ import model.Subtask;
 import model.Task;
 import model.TaskStatus;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,20 +31,44 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    protected void updateEpicStatus(Epic epic) {
+    protected void updateEpicState(Epic epic) {
         epic.setStatus(TaskStatus.NEW);
 
         for (Subtask subtask : getAllSubtasks()) {
-            if (Objects.equals(subtask.getEpicId(), epic.getId())) {
+            if (!Objects.equals(subtask.getEpicId(), epic.getId()))
+                continue;
+
+            LocalDateTime subtaskStartTime = subtask.getStartTime();
+            LocalDateTime subtaskEndTime = subtask.getEndTime();
+            LocalDateTime startTime = epic.getStartTime();
+            LocalDateTime endTime = epic.getEndTime();
+
+            if (subtaskStartTime != null) {
+                if (startTime == null || subtaskStartTime.isBefore(startTime)) {
+                    epic.setStartTime(subtaskStartTime);
+                }
+            }
+
+            if (subtaskEndTime != null) {
+                if (endTime == null || subtaskEndTime.isAfter(endTime)) {
+                    epic.setEndTime(subtaskEndTime);
+                }
+            }
+
+            if (epic.getStatus() != TaskStatus.IN_PROGRESS) {
                 switch (subtask.getStatus()) {
                     case IN_PROGRESS:
                         epic.setStatus(TaskStatus.IN_PROGRESS);
-                        return;
+                        break;
                     case DONE:
                         epic.setStatus(TaskStatus.DONE);
                         break;
                 }
             }
+        }
+
+        if (epic.getStartTime() != null && epic.getEndTime() != null) {
+            epic.setDuration(Duration.between(epic.getStartTime(), epic.getEndTime()));
         }
     }
 
@@ -82,7 +108,7 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epics.get(subtask.getEpicId());
 
             if (epic != null) {
-                updateEpicStatus(epic);
+                updateEpicState(epic);
             }
 
             historyManager.remove(subtask.getId());
@@ -129,31 +155,43 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addTask(Task task) {
-        updateTaskCounter(task);
-
         if (tasks.containsKey(task.getId())) {
             throw new IllegalArgumentException("Задача с таким ID уже существует!");
         }
 
+        if (subtasks.values().stream().anyMatch(st -> Task.isExecutionTimeOverlap(task, st))) {
+            throw new IllegalArgumentException(String.format(
+                "Задача с таким временным диапазоном (%s - %s) уже существует!",
+                task.getStartTime(), task.getEndTime()
+            ));
+        }
+
         tasks.put(task.getId(), task);
+        updateTaskCounter(task);
 
         return task.getId();
     }
 
     @Override
     public int addSubtask(Subtask subtask) {
-        updateTaskCounter(subtask);
-
         if (subtasks.containsKey(subtask.getId())) {
-            throw new IllegalArgumentException("Задача с таким ID уже существует!");
+            throw new IllegalArgumentException("Подзадача с таким ID уже существует!");
+        }
+
+        if (subtasks.values().stream().anyMatch(st -> Task.isExecutionTimeOverlap(subtask, st))) {
+            throw new IllegalArgumentException(String.format(
+                "Подзадача с таким временным диапазоном (%s - %s) уже существует!",
+                subtask.getStartTime(), subtask.getEndTime()
+            ));
         }
 
         subtasks.put(subtask.getId(), subtask);
+        updateTaskCounter(subtask);
 
         Epic epic = epics.get(subtask.getEpicId());
 
         if (epic != null) {
-            updateEpicStatus(epic);
+            updateEpicState(epic);
         }
 
         return subtask.getId();
@@ -161,15 +199,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addEpic(Epic epic) {
-        updateTaskCounter(epic);
-
         if (epics.containsKey(epic.getId())) {
-            throw new IllegalArgumentException("Задача с таким ID уже существует!");
+            throw new IllegalArgumentException("Эпик с таким ID уже существует!");
         }
 
-        updateEpicStatus(epic);
-
         epics.put(epic.getId(), epic);
+        updateTaskCounter(epic);
+        updateEpicState(epic);
 
         return epic.getId();
     }
@@ -197,7 +233,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtasks.containsKey(subtask.getId())) {
             Epic epic = epics.get(subtask.getEpicId());
             if (epic != null) {
-                updateEpicStatus(epic);
+                updateEpicState(epic);
             }
 
             subtasks.put(subtask.getId(), subtask);
@@ -213,7 +249,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
         if (epics.containsKey(epic.getId())) {
-            updateEpicStatus(epic);
+            updateEpicState(epic);
             epics.put(epic.getId(), epic);
         } else {
             throw new IllegalArgumentException("Задача не найденна!");
@@ -233,7 +269,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(subtask.getEpicId());
 
         if (epic != null) {
-            updateEpicStatus(epic);
+            updateEpicState(epic);
         }
 
         subtasks.remove(id);

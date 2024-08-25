@@ -1,11 +1,12 @@
 import model.Epic;
+import model.Task;
 import model.TaskStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EpicEntityTest {
-    String serializedEpic = "1,EPIC,EPIC,NEW,EPIC DESC,";
+    String serializedEpic = "1,EPIC,EPIC,NEW,EPIC DESC,null,null,null";
 
     @Test
     public void shouldCorrectlySerialize() {
