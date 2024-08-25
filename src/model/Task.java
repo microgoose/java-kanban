@@ -69,7 +69,18 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.format("%s; %s; %s", getName(), getDescription(), getStatus());
+        //1,TASK,Task1,NEW,Description task1,
+        return String.format("%s,%S,%s,%S,%s,", getId(), TaskTypes.TASK, getName(), getStatus(), getDescription());
+    }
+
+    public static Task fromString(String value) {
+        String[] parts = value.split(",");
+
+        if (parts.length != 5) {
+            throw new IllegalArgumentException("Неккоректный формат строки-задачи");
+        }
+
+        return new Task(Integer.parseInt(parts[0]), parts[2], parts[4], TaskStatus.valueOf(parts[3]));
     }
 
     @Override
