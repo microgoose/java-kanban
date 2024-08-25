@@ -134,8 +134,8 @@ public class Task {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Config.DATE_TIME_FORMAT);
 
-        String startTime = getStartTime() == null? null : formatter.format(getStartTime());
-        String duration = getDuration() == null? null : String.valueOf(getDuration().toMinutes());
+        String startTime = getStartTime() == null ? null : formatter.format(getStartTime());
+        String duration = getDuration() == null ? null : String.valueOf(getDuration().toMinutes());
 
         //1,TASK,Task1,NEW,Description task1,01.01.0001 01:01,78,
         return String.format("%s,%S,%s,%S,%s,%s,%s,null",
@@ -156,17 +156,17 @@ public class Task {
             parts[2],
             parts[4],
             TaskStatus.valueOf(parts[3]),
-            parts[5].equals("null")? null : LocalDateTime.parse(parts[5], formatter),
-            parts[6].equals("null")? null : Duration.ofMinutes(Long.parseLong(parts[6]))
+            parts[5].equals("null") ? null : LocalDateTime.parse(parts[5], formatter),
+            parts[6].equals("null") ? null : Duration.ofMinutes(Long.parseLong(parts[6]))
         );
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 31 * hash + (id == null? 0 : id);
-        hash = 31 * hash + (name == null? 0 : name.hashCode());
-        hash = 31 * hash + (description == null? 0 : description.hashCode());
+        hash = 31 * hash + (id == null ? 0 : id);
+        hash = 31 * hash + (name == null ? 0 : name.hashCode());
+        hash = 31 * hash + (description == null ? 0 : description.hashCode());
         return hash;
     }
 }
