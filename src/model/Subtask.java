@@ -61,9 +61,9 @@ public class Subtask extends Task {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Config.DATE_TIME_FORMAT);
 
-        String startTime = getStartTime() == null ? null : formatter.format(getStartTime());
-        String duration = getDuration() == null ? null : String.valueOf(getDuration().toMinutes());
-        String epicId = getEpicId() == null ? null : getEpicId().toString();
+        String startTime = getStartTime() == null? null : formatter.format(getStartTime());
+        String duration = getDuration() == null? null : String.valueOf(getDuration().toMinutes());
+        String epicId = getEpicId() == null? null : getEpicId().toString();
 
         //3,SUBTASK,Sub Task2,DONE,Description sub task3,01.01.0001 01:01,78,2
         return String.format("%s,%S,%s,%S,%s,%s,%s,%s",
