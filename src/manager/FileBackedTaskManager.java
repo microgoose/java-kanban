@@ -10,7 +10,7 @@ import model.TaskTypes;
 import java.io.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    protected String csvTableHead = "id,type,name,status,description,epic";
+    protected String csvTableHead = "id, type, name, status, description, startTime, duration, epic";
     protected final File file;
 
     public FileBackedTaskManager(File file) {
@@ -98,44 +98,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void removeAllEpics() {
         super.removeAllEpics();
-    }
-
-    @Override
-    public int addTask(Task task) {
-        int id = super.addTask(task);
-        save();
-        return id;
-    }
-
-    @Override
-    public int addSubtask(Subtask subtask) {
-        int id = super.addSubtask(subtask);
-        save();
-        return id;
-    }
-
-    @Override
-    public int addEpic(Epic epic) {
-        int id = super.addEpic(epic);
-        save();
-        return id;
-    }
-
-    @Override
-    public void updateTask(Task task) {
-        super.updateTask(task);
-        save();
-    }
-
-    @Override
-    public void updateSubtask(Subtask subtask) {
-        super.updateSubtask(subtask);
-        save();
-    }
-
-    @Override
-    public void updateEpic(Epic epic) {
-        super.updateEpic(epic);
         save();
     }
 
@@ -155,5 +117,26 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public void removeEpicById(int id) {
         super.removeEpicById(id);
         save();
+    }
+
+    @Override
+    protected int setTask(Task task) {
+        int id = super.setTask(task);
+        save();
+        return id;
+    }
+
+    @Override
+    protected int setSubtask(Subtask subtask) {
+        int id = super.setSubtask(subtask);
+        save();
+        return id;
+    }
+
+    @Override
+    protected int setEpic(Epic epic) {
+        int id = super.setEpic(epic);
+        save();
+        return id;
     }
 }

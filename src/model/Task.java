@@ -1,5 +1,11 @@
 package model;
 
+import common.Config;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -7,6 +13,18 @@ public class Task {
     protected String name;
     protected String description;
     protected TaskStatus status;
+    protected Duration duration;
+    protected LocalDateTime startTime;
+
+    public Task(Integer id, String name, String description,
+                TaskStatus status, LocalDateTime startTime, Duration duration) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
 
     public Task(Integer id, String name, String description, TaskStatus status) {
         this.id = id;
@@ -59,6 +77,51 @@ public class Task {
         this.status = status;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (duration == null || startTime == null) {
+            return null;
+        }
+
+        return this.startTime.plus(duration);
+    }
+
+    public static boolean isExecutionTimeOverlap(Task source, Task target) {
+        LocalDateTime sourceEndTime = source.getEndTime();
+        LocalDateTime targetEndTime = target.getEndTime();
+
+        if (sourceEndTime == null || targetEndTime == null) {
+            return false;
+        }
+
+        long sourceStartTimeMs = source.getStartTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long sourceEndTimeMs = sourceEndTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long targetStartTimeMs = target.getStartTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long targetEndTimeMs = targetEndTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        boolean startTimeBetweenStartAndEnd =
+                sourceStartTimeMs >= targetStartTimeMs && sourceStartTimeMs <= targetEndTimeMs;
+        boolean endTimeBetweenStartAndEnd =
+                sourceEndTimeMs >= targetStartTimeMs && sourceEndTimeMs <= targetEndTimeMs;
+
+        return startTimeBetweenStartAndEnd || endTimeBetweenStartAndEnd;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,18 +132,33 @@ public class Task {
 
     @Override
     public String toString() {
-        //1,TASK,Task1,NEW,Description task1,
-        return String.format("%s,%S,%s,%S,%s,", getId(), TaskTypes.TASK, getName(), getStatus(), getDescription());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Config.DATE_TIME_FORMAT);
+
+        String startTime = getStartTime() == null ? null : formatter.format(getStartTime());
+        String duration = getDuration() == null ? null : String.valueOf(getDuration().toMinutes());
+
+        //1,TASK,Task1,NEW,Description task1,01.01.0001 01:01,78,
+        return String.format("%s,%S,%s,%S,%s,%s,%s,null",
+                getId(), TaskTypes.TASK, getName(), getStatus(),
+                getDescription(), startTime, duration);
     }
 
     public static Task fromString(String value) {
         String[] parts = value.split(",");
 
-        if (parts.length != 5) {
+        if (parts.length != 8)
             throw new IllegalArgumentException("Неккоректный формат строки-задачи");
-        }
 
-        return new Task(Integer.parseInt(parts[0]), parts[2], parts[4], TaskStatus.valueOf(parts[3]));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Config.DATE_TIME_FORMAT);
+
+        return new Task(
+            Integer.parseInt(parts[0]),
+            parts[2],
+            parts[4],
+            TaskStatus.valueOf(parts[3]),
+            parts[5].equals("null") ? null : LocalDateTime.parse(parts[5], formatter),
+            parts[6].equals("null") ? null : Duration.ofMinutes(Long.parseLong(parts[6]))
+        );
     }
 
     @Override
