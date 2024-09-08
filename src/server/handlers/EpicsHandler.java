@@ -1,17 +1,26 @@
 package server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import managers.common.TaskManager;
-import server.common.BaseHttpHandler;
+import server.common.BaseTaskHandler;
 
-public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
+public class EpicsHandler extends BaseTaskHandler {
     public EpicsHandler(TaskManager taskManager) {
         super(taskManager);
     }
 
     @Override
-    public void handle(HttpExchange exchange) {
+    protected void handleGet(HttpExchange exchange) {
+
+    }
+
+    @Override
+    protected void handlePost(HttpExchange exchange) {
+
+    }
+
+    @Override
+    protected void handleDelete(HttpExchange exchange) {
 
     }
 }
