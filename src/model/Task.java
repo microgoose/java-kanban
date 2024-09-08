@@ -147,7 +147,7 @@ public class Task {
         String[] parts = value.split(",");
 
         if (parts.length != 8)
-            throw new IllegalArgumentException("Неккоректный формат строки-задачи");
+            throw new IllegalArgumentException("Некоректный формат строки-задачи");
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Config.DATE_TIME_FORMAT);
 

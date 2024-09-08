@@ -21,6 +21,14 @@ public abstract class BaseHttpHandler {
         h.close();
     }
 
+    protected void sendBadRequest(HttpExchange h, String text) throws IOException {
+        send(h, text, 400);
+    }
+
+    protected void sendInternalError(HttpExchange h, String text) throws IOException {
+        send(h, text, 500);
+    }
+
     protected void sendText(HttpExchange h, String text) throws IOException {
         send(h, text, 200);
     }

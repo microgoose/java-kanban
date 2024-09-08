@@ -32,7 +32,7 @@ public class Epic extends Task {
         String[] parts = value.split(",");
 
         if (parts.length != 8)
-            throw new IllegalArgumentException("Неккоректный формат строки-эпика");
+            throw new IllegalArgumentException("Некоректный формат строки-эпика");
 
         return new Epic(Integer.parseInt(parts[0]), parts[2], parts[4]);
     }

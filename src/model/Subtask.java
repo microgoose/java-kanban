@@ -75,7 +75,7 @@ public class Subtask extends Task {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Config.DATE_TIME_FORMAT);
 
         if (parts.length != 8)
-            throw new IllegalArgumentException("Неккоректный формат строки-подзадчи");
+            throw new IllegalArgumentException("Некоректный формат строки-подзадчи");
 
         return new Subtask(
                 Integer.parseInt(parts[0]),

@@ -4,6 +4,8 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import managers.common.TaskManager;
 
+import java.io.IOException;
+
 public abstract class BaseTaskHandler extends BaseHttpHandler implements HttpHandler {
     public BaseTaskHandler(TaskManager taskManager) {
         super(taskManager);
@@ -32,9 +34,9 @@ public abstract class BaseTaskHandler extends BaseHttpHandler implements HttpHan
         }
     }
 
-    protected abstract void handleGet(HttpExchange exchange);
+    protected abstract void handleGet(HttpExchange exchange) throws IOException;
 
-    protected abstract void handlePost(HttpExchange exchange);
+    protected abstract void handlePost(HttpExchange exchange) throws IOException;
 
-    protected abstract void handleDelete(HttpExchange exchange);
+    protected abstract void handleDelete(HttpExchange exchange) throws IOException;
 }

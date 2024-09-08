@@ -10,7 +10,12 @@ import java.net.InetSocketAddress;
 public class HttpTaskServer {
     private static final int PORT = 8080;
 
-    public static void main(String[] args) {
+    HttpServer httpServer = null;
+
+    public void start() {
+        if (httpServer != null)
+            return;
+
         try {
             HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
             TaskManager taskManager = Managers.getDefault();
@@ -22,8 +27,23 @@ public class HttpTaskServer {
             httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager));
 
             httpServer.start();
+            System.out.println("Сервер запущен!");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public void stop() {
+        if (httpServer == null) {
+            throw new IllegalStateException("Сервер не был инициализирован!");
+        }
+
+        httpServer.stop(0);
+        System.out.println("Сервер остановлен!");
+    }
+
+    public static void main(String[] args) {
+        HttpTaskServer server = new HttpTaskServer();
+        server.start();
     }
 }
