@@ -1,5 +1,6 @@
 import managers.common.ManagerReadException;
 import managers.FileBackedTaskManager;
+import managers.common.NotFoundException;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -90,7 +91,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    public void shouldLoadDataFromFile() throws IOException {
+    public void shouldLoadDataFromFile() throws IOException, NotFoundException {
         FileBackedTaskManager taskManagerForLoad = createFilledTaskManager(createEmptyDataFile());
         Task task = new ArrayList<>(taskManagerForLoad.getAllTasks()).getFirst();
         Subtask subtask = new ArrayList<>(taskManagerForLoad.getAllSubtasks()).getFirst();

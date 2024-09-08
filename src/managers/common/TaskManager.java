@@ -21,11 +21,11 @@ public interface TaskManager {
 
     void removeAllEpics();
 
-    Task getTaskById(int index);
+    Task getTaskById(int index) throws NotFoundException;
 
-    Subtask getSubtaskById(int index);
+    Subtask getSubtaskById(int index) throws NotFoundException;
 
-    Epic getEpicById(int index);
+    Epic getEpicById(int index) throws NotFoundException;
 
     int addTask(Task task);
 
@@ -33,17 +33,17 @@ public interface TaskManager {
 
     int addEpic(Epic epic);
 
-    void updateTask(Task task);
+    void updateTask(Task task) throws NotFoundException;
 
-    void updateSubtask(Subtask subtask);
+    void updateSubtask(Subtask subtask) throws NotFoundException;
 
-    void updateEpic(Epic epic);
+    void updateEpic(Epic epic) throws NotFoundException;
 
-    void removeTaskById(int id);
+    void removeTaskById(int id) throws NotFoundException;
 
-    void removeSubtaskById(int id);
+    void removeSubtaskById(int id) throws NotFoundException;
 
-    void removeEpicById(int id);
+    void removeEpicById(int id) throws NotFoundException;
 
     Collection<Subtask> getEpicSubtasks(int id);
 

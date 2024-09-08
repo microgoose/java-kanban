@@ -2,6 +2,7 @@ package managers;
 
 import managers.common.ManagerReadException;
 import managers.common.ManagerSaveException;
+import managers.common.NotFoundException;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -102,19 +103,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void removeTaskById(int id) {
+    public void removeTaskById(int id) throws NotFoundException {
         super.removeTaskById(id);
         save();
     }
 
     @Override
-    public void removeSubtaskById(int id) {
+    public void removeSubtaskById(int id) throws NotFoundException {
         super.removeSubtaskById(id);
         save();
     }
 
     @Override
-    public void removeEpicById(int id) {
+    public void removeEpicById(int id) throws NotFoundException {
         super.removeEpicById(id);
         save();
     }

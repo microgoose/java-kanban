@@ -1,3 +1,4 @@
+import managers.common.NotFoundException;
 import managers.common.TaskManager;
 import model.Epic;
 import model.Subtask;
@@ -42,7 +43,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testGetHistory() {
+    public void testGetHistory() throws NotFoundException {
         TaskManager tm = createTaskManager();
         Task task = createTask();
         Subtask subtask = createSubtask();
@@ -113,7 +114,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testGetTaskById() {
+    public void testGetTaskById() throws NotFoundException {
         TaskManager tm = createTaskManager();
         Task task = createTask();
         tm.addTask(task);
@@ -121,7 +122,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testGetSubtaskById() {
+    public void testGetSubtaskById() throws NotFoundException {
         TaskManager tm = createTaskManager();
         Subtask subtask = createSubtask();
         tm.addSubtask(subtask);
@@ -129,7 +130,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testGetEpicById() {
+    public void testGetEpicById() throws NotFoundException {
         TaskManager tm = createTaskManager();
         Epic epic = createEpic();
         tm.addEpic(epic);
@@ -161,7 +162,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testUpdateTask() {
+    public void testUpdateTask() throws NotFoundException {
         TaskManager tm = createTaskManager();
         Task task = createTask();
         tm.addTask(task);
@@ -173,7 +174,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testUpdateSubtask() {
+    public void testUpdateSubtask() throws NotFoundException {
         TaskManager tm = createTaskManager();
         Subtask subtask = createSubtask();
         tm.addSubtask(subtask);
@@ -185,7 +186,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testUpdateEpic() {
+    public void testUpdateEpic() throws NotFoundException {
         TaskManager tm = createTaskManager();
         Epic epic = createEpic();
         tm.addEpic(epic);
@@ -197,7 +198,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testRemoveTaskById() {
+    public void testRemoveTaskById() throws NotFoundException {
         TaskManager tm = createTaskManager();
         Task task = createTask();
         tm.addTask(task);
@@ -207,7 +208,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testRemoveSubtaskById() {
+    public void testRemoveSubtaskById() throws NotFoundException {
         TaskManager tm = createTaskManager();
         Subtask subtask = createSubtask();
         tm.addSubtask(subtask);
@@ -217,7 +218,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void testRemoveEpicById() {
+    public void testRemoveEpicById() throws NotFoundException {
         TaskManager tm = createTaskManager();
         Epic epic = createEpic();
         tm.addEpic(epic);

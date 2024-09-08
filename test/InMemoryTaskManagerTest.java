@@ -1,3 +1,4 @@
+import managers.common.NotFoundException;
 import managers.common.TaskManager;
 import managers.InMemoryTaskManager;
 import model.Epic;
@@ -18,7 +19,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    public void mustUpdateEpicStatusAfterSubtaskAdded() {
+    public void mustUpdateEpicStatusAfterSubtaskAdded() throws NotFoundException {
         TaskManager tm = createTaskManager();
         Epic epic = new Epic(nextId(), "Эпик", "Описание");
         Subtask subtask = new Subtask(nextId(), "Подзадача", "Описание", epic.getId());
@@ -43,7 +44,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    public void shouldCorrectlyCalculateEpicEndTime() {
+    public void shouldCorrectlyCalculateEpicEndTime() throws NotFoundException {
         TaskManager tm = createTaskManager();
 
         Epic epic = new Epic(nextId(), "Эпик", "Описание");
