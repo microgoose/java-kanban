@@ -1,4 +1,4 @@
-package common;
+package managers.common;
 
 import model.Epic;
 import model.Subtask;

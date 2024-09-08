@@ -1,6 +1,6 @@
-package manager;
+package managers;
 
-import common.HistoryManager;
+import managers.common.HistoryManager;
 import model.Task;
 import model.TaskNode;
 

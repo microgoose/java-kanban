@@ -1,4 +1,4 @@
-package common;
+package managers.common;
 
 public class ManagerSaveException extends RuntimeException {
     public ManagerSaveException(final Throwable cause) {

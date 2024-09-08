@@ -1,5 +1,5 @@
-import common.TaskManager;
-import manager.InMemoryTaskManager;
+import managers.InMemoryTaskManager;
+import managers.common.TaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;

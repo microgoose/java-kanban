@@ -1,7 +1,7 @@
-package manager;
+package managers;
 
-import common.HistoryManager;
-import common.TaskManager;
+import managers.common.HistoryManager;
+import managers.common.TaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;

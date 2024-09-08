@@ -1,7 +1,7 @@
-package manager;
+package managers;
 
-import common.ManagerReadException;
-import common.ManagerSaveException;
+import managers.common.ManagerReadException;
+import managers.common.ManagerSaveException;
 import model.Epic;
 import model.Subtask;
 import model.Task;

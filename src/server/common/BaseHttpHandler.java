@@ -1,6 +1,7 @@
-package common;
+package server.common;
 
 import com.sun.net.httpserver.HttpExchange;
+import managers.common.TaskManager;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

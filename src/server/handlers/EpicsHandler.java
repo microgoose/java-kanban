@@ -2,8 +2,8 @@ package server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import common.BaseHttpHandler;
-import common.TaskManager;
+import managers.common.TaskManager;
+import server.common.BaseHttpHandler;
 
 public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
     public EpicsHandler(TaskManager taskManager) {

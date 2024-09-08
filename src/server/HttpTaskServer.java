@@ -1,8 +1,8 @@
 package server;
 
 import com.sun.net.httpserver.HttpServer;
-import common.TaskManager;
-import manager.Managers;
+import managers.Managers;
+import managers.common.TaskManager;
 import server.handlers.*;
 
 import java.net.InetSocketAddress;
