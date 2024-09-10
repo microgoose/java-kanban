@@ -74,33 +74,33 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTaskById(int index) throws NotFoundException {
+    public Task getTaskById(int index) {
         Task task = tasks.get(index);
 
         if (task == null)
-            throw new NotFoundException("Задача не найденна!");
+            throw new NotFoundException(String.format("Задача с ID: %s не найденна!", index));
 
         historyManager.add(task);
         return task;
     }
 
     @Override
-    public Subtask getSubtaskById(int index) throws NotFoundException {
+    public Subtask getSubtaskById(int index) {
         Subtask subtask = subtasks.get(index);
 
         if (subtask == null)
-            throw new NotFoundException("Подзадача не найденна!");
+            throw new NotFoundException(String.format("Подзадача с ID: %s не найденна!", index));
 
         historyManager.add(subtask);
         return subtask;
     }
 
     @Override
-    public Epic getEpicById(int index) throws NotFoundException {
+    public Epic getEpicById(int index) {
         Epic epic = epics.get(index);
 
         if (epic == null)
-            throw new NotFoundException("Эпик не найден!");
+            throw new NotFoundException(String.format("Эпик с ID: %s не найден!", index));
 
         historyManager.add(epic);
         return epic;
@@ -109,34 +109,42 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addTask(Task task) {
-        if (tasks.containsKey(task.getId())) {
-            throw new IllegalArgumentException("Задача с таким ID уже существует!");
-        }
+        if (tasks.containsKey(task.getId()))
+            throw new IllegalArgumentException(String.format("Задача с ID: %s уже существует!", task.getId()));
+
+        if (task.getId() == null)
+            task.setId(taskCounter);
 
         return setTask(task);
     }
 
     @Override
     public int addSubtask(Subtask subtask) {
-        if (subtasks.containsKey(subtask.getId())) {
-            throw new IllegalArgumentException("Подзадача с таким ID уже существует!");
-        }
+        if (subtasks.containsKey(subtask.getId()))
+            throw new IllegalArgumentException(
+                    String.format("Подзадача с ID: %s уже существует!", subtask.getId()));
+
+        if (subtask.getId() == null)
+            subtask.setId(taskCounter);
 
         return setSubtask(subtask);
     }
 
     @Override
     public int addEpic(Epic epic) {
-        if (epics.containsKey(epic.getId())) {
-            throw new IllegalArgumentException("Эпик с таким ID уже существует!");
-        }
+        if (epics.containsKey(epic.getId()))
+            throw new IllegalArgumentException(
+                    String.format("Эпик с ID: %s уже существует!", epic.getId()));
+
+        if (epic.getId() == null)
+            epic.setId(taskCounter);
 
         return setEpic(epic);
     }
 
 
     @Override
-    public void updateTask(Task task) throws NotFoundException {
+    public void updateTask(Task task) {
         if (task == null) {
             throw new IllegalArgumentException("Задача не может быть null");
         }
@@ -144,12 +152,12 @@ public class InMemoryTaskManager implements TaskManager {
         if (tasks.containsKey(task.getId())) {
             setTask(task);
         } else {
-            throw new NotFoundException("Задача не найденна!");
+            throw new NotFoundException(String.format("Задача с ID: %s не найденна!", task.getId()));
         }
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) throws NotFoundException {
+    public void updateSubtask(Subtask subtask) {
         if (subtask == null) {
             throw new IllegalArgumentException("Подзадача не может быть null");
         }
@@ -157,12 +165,12 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtasks.containsKey(subtask.getId())) {
             setSubtask(subtask);
         } else {
-            throw new NotFoundException("Подзадача не найденна!");
+            throw new NotFoundException(String.format("Подзадача с ID: %s не найденна!", subtask.getId()));
         }
     }
 
     @Override
-    public void updateEpic(Epic epic) throws NotFoundException {
+    public void updateEpic(Epic epic) {
         if (epic == null) {
             throw new IllegalArgumentException("Эпик не может быть null");
         }
@@ -170,27 +178,26 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(epic.getId())) {
             setEpic(epic);
         } else {
-            throw new NotFoundException("Эпик не найден!");
+            throw new NotFoundException(String.format("Эпик с ID: %s не найден!", epic.getId()));
         }
     }
 
 
     @Override
-    public void removeTaskById(int id) throws NotFoundException {
-        if (!tasks.containsKey(id)) {
-            throw new NotFoundException("Задача не найдена!");
-        }
+    public void removeTaskById(int id) {
+        if (!tasks.containsKey(id))
+            throw new NotFoundException(String.format("Задача с ID: %s не найдена!", id));
 
         tasks.remove(id);
         historyManager.remove(id);
     }
 
     @Override
-    public void removeSubtaskById(int id) throws NotFoundException {
+    public void removeSubtaskById(int id) {
         Subtask subtask = subtasks.get(id);
 
         if (subtask == null)
-            throw new NotFoundException("Подзадача не найденна!");
+            throw new NotFoundException(String.format("Подзадача с ID: %s не найдена!", id));
 
         Epic epic = epics.get(subtask.getEpicId());
 
@@ -203,10 +210,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void removeEpicById(int id) throws NotFoundException {
-        if (!epics.containsKey(id)) {
-            throw new NotFoundException("Эпик не найден!");
-        }
+    public void removeEpicById(int id) {
+        if (!epics.containsKey(id))
+            throw new NotFoundException(String.format("Эпик с ID: %s не найден!", id));
 
         getEpicSubtasks(id).forEach(epicSubtask -> {
             subtasks.remove(epicSubtask.getId());
@@ -222,7 +228,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(id);
 
         if (epic == null) {
-            throw new IllegalArgumentException("Не найден эпик с заданным идентификатором: " + id);
+            throw new NotFoundException(String.format("Эпик с ID: %s не найден!", id));
         }
 
         return getAllSubtasks()

@@ -2,9 +2,9 @@ package server.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import managers.common.TaskManager;
-import server.common.BaseTaskHandler;
+import server.common.BaseTaskManagerHandler;
 
-public class EpicsHandler extends BaseTaskHandler {
+public class EpicsHandler extends BaseTaskManagerHandler {
     public EpicsHandler(TaskManager taskManager) {
         super(taskManager);
     }

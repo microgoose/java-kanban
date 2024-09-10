@@ -12,19 +12,18 @@ public class HttpTaskServer {
 
     HttpServer httpServer = null;
 
-    public void start() {
+    public void start(TaskManager taskManager) {
         if (httpServer != null)
             return;
 
         try {
             HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
-            TaskManager taskManager = Managers.getDefault();
 
+            httpServer.createContext("/history", new HistoryHandler(taskManager));
+            httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager));
             httpServer.createContext("/tasks", new TasksHandler(taskManager));
             httpServer.createContext("/subtasks", new SubtasksHandler(taskManager));
             httpServer.createContext("/epics", new EpicsHandler(taskManager));
-            httpServer.createContext("/history", new HistoryHandler(taskManager));
-            httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager));
 
             httpServer.start();
             System.out.println("Сервер запущен!");
@@ -43,7 +42,8 @@ public class HttpTaskServer {
     }
 
     public static void main(String[] args) {
+        TaskManager taskManager = Managers.getDefault();
         HttpTaskServer server = new HttpTaskServer();
-        server.start();
+        server.start(taskManager);
     }
 }
