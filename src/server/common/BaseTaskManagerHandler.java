@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public abstract class BaseTaskManagerHandler extends BaseHttpHandler implements HttpHandler {
-    public final String RESPONSE_ERROR_KEY = "error";
+    public final String responseErrorKey = "error";
 
     protected Gson gson;
 
@@ -52,11 +52,17 @@ public abstract class BaseTaskManagerHandler extends BaseHttpHandler implements 
         }
     }
 
-    protected void handleGet(HttpExchange exchange) {}
+    protected void handleGet(HttpExchange exchange) {
 
-    protected void handlePost(HttpExchange exchange) {}
+    }
 
-    protected void handleDelete(HttpExchange exchange) {}
+    protected void handlePost(HttpExchange exchange) {
+
+    }
+
+    protected void handleDelete(HttpExchange exchange) {
+
+    }
 
     @Override
     protected void sendInternalError(HttpExchange h, String text) {
@@ -88,7 +94,7 @@ public abstract class BaseTaskManagerHandler extends BaseHttpHandler implements 
 
     private String toErrorJson(String text) {
         JsonObject responseJson = new JsonObject();
-        responseJson.addProperty(RESPONSE_ERROR_KEY, text);
+        responseJson.addProperty(responseErrorKey, text);
         return gson.toJson(responseJson);
     }
 }
