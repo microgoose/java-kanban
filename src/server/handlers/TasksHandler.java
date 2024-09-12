@@ -6,6 +6,7 @@ import managers.common.NotFoundException;
 import managers.common.TaskManager;
 import model.Task;
 import server.common.BaseTaskManagerHandler;
+import server.common.ParseTaskURLParam;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -89,22 +90,6 @@ public class TasksHandler extends BaseTaskManagerHandler {
     private void setupParams(HttpExchange exchange) {
         String basePath = "tasks";
         String path = exchange.getRequestURI().getPath();
-        String[] pathParts = path.split("/");
-
-        taskIdParam = null;
-
-        if (path.equals(basePath)) {
-            return;
-        }
-
-        if (pathParts.length != 3 && !pathParts[1].equals(basePath)) {
-            throw new IllegalArgumentException("Некоректный адресс");
-        }
-
-        try {
-            taskIdParam = Integer.parseInt(pathParts[2]);
-        } catch (NumberFormatException  ex) {
-            throw new IllegalArgumentException("Неккоректный ID задачи: " + pathParts[2]);
-        }
+        taskIdParam = ParseTaskURLParam.parse(path, basePath);
     }
 }

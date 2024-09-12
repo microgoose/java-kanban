@@ -4,55 +4,56 @@ import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 import managers.common.NotFoundException;
 import managers.common.TaskManager;
-import model.Task;
+import model.Subtask;
 import server.common.BaseTaskManagerHandler;
+import server.common.ParseTaskURLParam;
 
 import java.util.Collection;
 import java.util.Optional;
 
 public class SubtasksHandler extends BaseTaskManagerHandler {
-    protected Integer taskIdParam;
+    protected Integer subtaskIdParam;
 
     public SubtasksHandler(TaskManager taskManager) {
         super(taskManager);
-        taskIdParam = null;
+        subtaskIdParam = null;
     }
 
     @Override
     protected void handleGet(HttpExchange exchange) {
         setupParams(exchange);
 
-        if (taskIdParam == null) {
-            Collection<Task> tasks = taskManager.getAllTasks();
-            sendText(exchange, gson.toJson(tasks));
+        if (subtaskIdParam == null) {
+            Collection<Subtask> subtasks = taskManager.getAllSubtasks();
+            sendText(exchange, gson.toJson(subtasks));
             return;
         }
 
         try {
-            Task task = taskManager.getTaskById(taskIdParam);
-            sendText(exchange, gson.toJson(task));
+            Subtask subtask = taskManager.getSubtaskById(subtaskIdParam);
+            sendText(exchange, gson.toJson(subtask));
         } catch (NotFoundException ex) {
-            sendNotFound(exchange, "Не найденна задача с ID: " + taskIdParam);
+            sendNotFound(exchange, "Не найденна подздача с ID: " + subtaskIdParam);
         }
     }
 
     @Override
     protected void handlePost(HttpExchange exchange) {
         String body = readPostBody(exchange);
-        Optional<Task> optionalTask = getTask(Task.class, body);
+        Optional<Subtask> optionalSubtask = getTask(Subtask.class, body);
 
-        if (optionalTask.isEmpty()) {
-            sendBadRequest(exchange, "Не удалось получить задачу. Проверьте тело запроса.");
+        if (optionalSubtask.isEmpty()) {
+            sendBadRequest(exchange, "Не удалось получить подзадачу. Проверьте тело запроса.");
             return;
         }
 
-        Task task = optionalTask.get();
-        Integer taskId = task.getId();
+        Subtask subtask = optionalSubtask.get();
+        Integer subtaskId = subtask.getId();
 
-        if (taskId == null) {
+        if (subtaskId == null) {
             try {
-                taskManager.addTask(task);
-                sendText(exchange, gson.toJson(task));
+                taskManager.addSubtask(subtask);
+                sendText(exchange, gson.toJson(subtask));
                 return;
             } catch (IllegalArgumentException ex) {
                 sendHasInteractions(exchange, ex.getMessage());
@@ -60,10 +61,10 @@ public class SubtasksHandler extends BaseTaskManagerHandler {
         }
 
         try {
-            taskManager.updateTask(task);
-            sendText(exchange, gson.toJson(task));
+            taskManager.updateSubtask(subtask);
+            sendText(exchange, gson.toJson(subtask));
         } catch (NotFoundException nfe) {
-            sendNotFound(exchange, "Не удалось найти задачу с таким ID: " + taskId);
+            sendNotFound(exchange, "Не удалось найти подзадачу с таким ID: " + subtaskId);
         }
     }
 
@@ -71,40 +72,24 @@ public class SubtasksHandler extends BaseTaskManagerHandler {
     protected void handleDelete(HttpExchange exchange) {
         setupParams(exchange);
 
-        if (taskIdParam == null) {
-            sendNotFound(exchange, "Не передан ID задачи.");
+        if (subtaskIdParam == null) {
+            sendNotFound(exchange, "Не передан ID подзадачи.");
             return;
         }
 
         try {
-            taskManager.removeTaskById(taskIdParam);
+            taskManager.removeTaskById(subtaskIdParam);
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("taskId", taskIdParam);
+            jsonObject.addProperty("taskId", subtaskIdParam);
             sendText(exchange, gson.toJson(jsonObject));
         } catch (NotFoundException ex) {
-            sendNotFound(exchange, "Не найденна задача для удаления с ID: " + taskIdParam);
+            sendNotFound(exchange, "Не найденна подзадача для удаления с ID: " + subtaskIdParam);
         }
     }
 
     private void setupParams(HttpExchange exchange) {
-        String basePath = "tasks";
+        String basePath = "subtasks";
         String path = exchange.getRequestURI().getPath();
-        String[] pathParts = path.split("/");
-
-        taskIdParam = null;
-
-        if (path.equals(basePath)) {
-            return;
-        }
-
-        if (pathParts.length != 3 && !pathParts[1].equals(basePath)) {
-            throw new IllegalArgumentException("Некоректный адресс");
-        }
-
-        try {
-            taskIdParam = Integer.parseInt(pathParts[2]);
-        } catch (NumberFormatException  ex) {
-            throw new IllegalArgumentException("Неккоректный ID задачи: " + pathParts[2]);
-        }
+        subtaskIdParam = ParseTaskURLParam.parse(path, basePath);
     }
 }
