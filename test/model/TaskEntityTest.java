@@ -52,6 +52,9 @@ public class TaskEntityTest {
         Task taskWithTime = Task.fromString(serializedTaskWithTime);
         Task taskWithTime1 = Task.fromString(serializedTaskWithTime);
 
+        taskWithTime.setId(0);
+        taskWithTime1.setId(1);
+
         Task taskWithTime2 = Task.fromString(serializedTaskWithTime);
         taskWithTime2.setStartTime(taskWithTime1.getEndTime().plus(Duration.ofMinutes(10)));
         taskWithTime2.setDuration(Duration.ofMinutes(10));
