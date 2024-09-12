@@ -243,7 +243,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     protected int setTask(Task task) {
-        if (subtasks.values().stream().anyMatch(st -> Task.isExecutionTimeOverlap(task, st))) {
+        if (tasks.values().stream().anyMatch(st -> Task.isExecutionTimeOverlap(task, st))) {
             throw new IllegalArgumentException(String.format(
                 "Задача с таким временным диапазоном (%s - %s) уже существует!",
                 task.getStartTime(), task.getEndTime()
