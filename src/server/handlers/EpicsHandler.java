@@ -88,7 +88,7 @@ public class EpicsHandler extends BaseTaskManagerHandler {
     }
 
     private void setupParams(HttpExchange exchange) {
-        String basePath = "tasks";
+        String basePath = "epics";
         String path = exchange.getRequestURI().getPath();
         epicIdParam = ParseTaskURLParam.parse(path, basePath);
     }

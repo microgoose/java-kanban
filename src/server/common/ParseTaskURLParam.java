@@ -4,12 +4,12 @@ public class ParseTaskURLParam {
     public static Integer parse(String path, String basePath) {
         String[] pathParts = path.split("/");
 
-        if (path.equals(basePath)) {
-            return null;
+        if (pathParts.length != 2 && pathParts.length != 3) {
+            throw new IllegalArgumentException("Некоректный адресс");
         }
 
-        if (pathParts.length != 3 && !pathParts[1].equals(basePath)) {
-            throw new IllegalArgumentException("Некоректный адресс");
+        if (pathParts.length == 2 && pathParts[1].equals(basePath)) {
+            return null;
         }
 
         try {

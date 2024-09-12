@@ -1,6 +1,5 @@
 package server.handlers;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import managers.common.TaskManager;
 import model.Task;
@@ -16,7 +15,6 @@ public class HistoryHandler extends BaseTaskManagerHandler {
     @Override
     protected void handleGet(HttpExchange exchange) {
         Collection<Task> tasks = taskManager.getHistory();
-        Gson gson = new Gson();
         sendText(exchange, gson.toJson(tasks));
     }
 }
