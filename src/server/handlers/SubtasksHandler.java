@@ -54,10 +54,11 @@ public class SubtasksHandler extends BaseTaskManagerHandler {
             try {
                 taskManager.addSubtask(subtask);
                 sendText(exchange, gson.toJson(subtask));
-                return;
             } catch (IllegalArgumentException ex) {
                 sendHasInteractions(exchange, ex.getMessage());
             }
+
+            return;
         }
 
         try {
@@ -65,6 +66,8 @@ public class SubtasksHandler extends BaseTaskManagerHandler {
             sendText(exchange, gson.toJson(subtask));
         } catch (NotFoundException nfe) {
             sendNotFound(exchange, "Не удалось найти подзадачу с таким ID: " + subtaskId);
+        } catch (IllegalArgumentException ex) {
+            sendHasInteractions(exchange, ex.getMessage());
         }
     }
 
@@ -78,7 +81,7 @@ public class SubtasksHandler extends BaseTaskManagerHandler {
         }
 
         try {
-            taskManager.removeTaskById(subtaskIdParam);
+            taskManager.removeSubtaskById(subtaskIdParam);
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("taskId", subtaskIdParam);
             sendText(exchange, gson.toJson(jsonObject));

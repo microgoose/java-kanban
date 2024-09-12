@@ -27,7 +27,7 @@ public abstract class BaseHttpHandler {
         try {
             byte[] resp = text.getBytes(StandardCharsets.UTF_8);
             h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-            h.sendResponseHeaders(200, resp.length);
+            h.sendResponseHeaders(code, resp.length);
             h.getResponseBody().write(resp);
             h.close();
         } catch (Exception ex) {

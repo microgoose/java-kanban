@@ -1,8 +1,7 @@
+package managers;
+
 import managers.common.HistoryManager;
 import managers.common.TaskManager;
-import managers.InMemoryHistoryManager;
-import managers.InMemoryTaskManager;
-import managers.Managers;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;

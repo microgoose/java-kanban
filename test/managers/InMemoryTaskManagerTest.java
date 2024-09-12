@@ -1,6 +1,7 @@
+package managers;
+
 import managers.common.NotFoundException;
 import managers.common.TaskManager;
-import managers.InMemoryTaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -10,7 +11,8 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     @Override

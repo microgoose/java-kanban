@@ -1,4 +1,5 @@
-import managers.InMemoryHistoryManager;
+package managers;
+
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -7,7 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class InMemoryHistoryManagerTest {
     InMemoryHistoryManager historyManager = new InMemoryHistoryManager();

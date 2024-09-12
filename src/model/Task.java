@@ -102,6 +102,10 @@ public class Task {
     }
 
     public static boolean isExecutionTimeOverlap(Task source, Task target) {
+        if (Objects.equals(source.getId(), target.getId())) {
+            return false;
+        }
+
         LocalDateTime sourceEndTime = source.getEndTime();
         LocalDateTime targetEndTime = target.getEndTime();
 

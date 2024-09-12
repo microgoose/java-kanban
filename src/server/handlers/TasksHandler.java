@@ -54,10 +54,11 @@ public class TasksHandler extends BaseTaskManagerHandler {
             try {
                 taskManager.addTask(task);
                 sendText(exchange, gson.toJson(task));
-                return;
             } catch (IllegalArgumentException ex) {
                 sendHasInteractions(exchange, ex.getMessage());
             }
+
+            return;
         }
 
         try {
@@ -65,6 +66,8 @@ public class TasksHandler extends BaseTaskManagerHandler {
             sendText(exchange, gson.toJson(task));
         } catch (NotFoundException nfe) {
             sendNotFound(exchange, "Не удалось найти задачу с таким ID: " + taskId);
+        } catch (IllegalArgumentException ex) {
+            sendHasInteractions(exchange, ex.getMessage());
         }
     }
 

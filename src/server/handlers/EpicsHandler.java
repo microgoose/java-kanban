@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import managers.common.NotFoundException;
 import managers.common.TaskManager;
 import model.Epic;
+import model.Subtask;
 import server.common.BaseTaskManagerHandler;
 import server.common.ParseTaskURLParam;
 
@@ -30,6 +31,14 @@ public class EpicsHandler extends BaseTaskManagerHandler {
         }
 
         try {
+            String requestURI = exchange.getRequestURI().getPath();
+
+            if (requestURI.contains("/subtasks")) {
+                Collection<Subtask> subtasks = taskManager.getEpicSubtasks(epicIdParam);
+                sendText(exchange, gson.toJson(subtasks));
+                return;
+            }
+
             Epic epic = taskManager.getEpicById(epicIdParam);
             sendText(exchange, gson.toJson(epic));
         } catch (NotFoundException ex) {
@@ -54,10 +63,11 @@ public class EpicsHandler extends BaseTaskManagerHandler {
             try {
                 taskManager.addEpic(epic);
                 sendText(exchange, gson.toJson(epic));
-                return;
             } catch (IllegalArgumentException ex) {
                 sendHasInteractions(exchange, ex.getMessage());
             }
+
+            return;
         }
 
         try {
@@ -65,6 +75,8 @@ public class EpicsHandler extends BaseTaskManagerHandler {
             sendText(exchange, gson.toJson(epic));
         } catch (NotFoundException nfe) {
             sendNotFound(exchange, "Не удалось найти эпик с таким ID: " + epicId);
+        } catch (IllegalArgumentException ex) {
+            sendHasInteractions(exchange, ex.getMessage());
         }
     }
 
@@ -78,7 +90,7 @@ public class EpicsHandler extends BaseTaskManagerHandler {
         }
 
         try {
-            taskManager.removeTaskById(epicIdParam);
+            taskManager.removeEpicById(epicIdParam);
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("epicId", epicIdParam);
             sendText(exchange, gson.toJson(jsonObject));

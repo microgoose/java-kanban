@@ -4,7 +4,7 @@ public class ParseTaskURLParam {
     public static Integer parse(String path, String basePath) {
         String[] pathParts = path.split("/");
 
-        if (pathParts.length != 2 && pathParts.length != 3) {
+        if (pathParts.length < 2 || pathParts.length > 4) {
             throw new IllegalArgumentException("Некоректный адресс");
         }
 

@@ -17,7 +17,7 @@ public class HttpTaskServer {
             return;
 
         try {
-            HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
+            httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
 
             httpServer.createContext("/history", new HistoryHandler(taskManager));
             httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager));
