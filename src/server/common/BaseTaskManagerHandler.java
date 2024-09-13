@@ -47,8 +47,8 @@ public abstract class BaseTaskManagerHandler extends BaseHttpHandler implements 
 
             sendNotFound(exchange, "Передан некорректный метод запроса!");
         } catch (Exception ex) {
-            ex.printStackTrace();
             sendInternalError(exchange, ex.getMessage());
+            throw new RuntimeException(ex);
         }
     }
 

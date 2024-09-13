@@ -28,7 +28,7 @@ public class HttpTaskServer {
             httpServer.start();
             System.out.println("Сервер запущен!");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw new RuntimeException(ex);
         }
     }
 

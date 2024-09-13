@@ -32,7 +32,7 @@ public abstract class BaseHttpHandler {
             h.close();
         } catch (Exception ex) {
             System.out.printf("Ошибка при отправке ответа. Код: %s. Тело: %s\n", code, text);
-            ex.printStackTrace();
+            throw new RuntimeException(ex);
         }
     }
 
