@@ -1,4 +1,4 @@
-package common;
+package managers.common;
 
 public class ManagerReadException extends RuntimeException {
     public ManagerReadException(final Throwable cause) {

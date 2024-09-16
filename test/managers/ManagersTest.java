@@ -1,8 +1,7 @@
-import common.HistoryManager;
-import common.TaskManager;
-import manager.InMemoryHistoryManager;
-import manager.InMemoryTaskManager;
-import manager.Managers;
+package managers;
+
+import managers.common.HistoryManager;
+import managers.common.TaskManager;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -16,7 +15,7 @@ class ManagersTest {
 
         assertNotNull(taskManager, "Менеджер задач не создан");
         assertNotNull(historyManager, "Менеджер истоии задач не создан");
-        assertInstanceOf(InMemoryTaskManager.class, taskManager, "Неккоректный менеджер задач по умолчанию");
-        assertInstanceOf(InMemoryHistoryManager.class, historyManager, "Неккоректный менеджер истории по умолчанию");
+        assertInstanceOf(InMemoryTaskManager.class, taskManager, "Некоректный менеджер задач по умолчанию");
+        assertInstanceOf(InMemoryHistoryManager.class, historyManager, "Некоректный менеджер истории по умолчанию");
     }
 }

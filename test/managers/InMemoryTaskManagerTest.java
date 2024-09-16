@@ -1,5 +1,7 @@
-import common.TaskManager;
-import manager.InMemoryTaskManager;
+package managers;
+
+import managers.common.NotFoundException;
+import managers.common.TaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -9,7 +11,8 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     @Override
@@ -18,7 +21,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    public void mustUpdateEpicStatusAfterSubtaskAdded() {
+    public void mustUpdateEpicStatusAfterSubtaskAdded() throws NotFoundException {
         TaskManager tm = createTaskManager();
         Epic epic = new Epic(nextId(), "Эпик", "Описание");
         Subtask subtask = new Subtask(nextId(), "Подзадача", "Описание", epic.getId());
@@ -43,7 +46,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    public void shouldCorrectlyCalculateEpicEndTime() {
+    public void shouldCorrectlyCalculateEpicEndTime() throws NotFoundException {
         TaskManager tm = createTaskManager();
 
         Epic epic = new Epic(nextId(), "Эпик", "Описание");

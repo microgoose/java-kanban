@@ -1,16 +1,22 @@
-import common.ManagerReadException;
-import manager.FileBackedTaskManager;
+package managers;
+
+import managers.common.ManagerReadException;
+import managers.common.NotFoundException;
 import model.Epic;
 import model.Subtask;
 import model.Task;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     protected File createEmptyDataFile() throws IOException {
@@ -90,7 +96,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    public void shouldLoadDataFromFile() throws IOException {
+    public void shouldLoadDataFromFile() throws IOException, NotFoundException {
         FileBackedTaskManager taskManagerForLoad = createFilledTaskManager(createEmptyDataFile());
         Task task = new ArrayList<>(taskManagerForLoad.getAllTasks()).getFirst();
         Subtask subtask = new ArrayList<>(taskManagerForLoad.getAllSubtasks()).getFirst();

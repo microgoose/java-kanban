@@ -102,6 +102,10 @@ public class Task {
     }
 
     public static boolean isExecutionTimeOverlap(Task source, Task target) {
+        if (Objects.equals(source.getId(), target.getId())) {
+            return false;
+        }
+
         LocalDateTime sourceEndTime = source.getEndTime();
         LocalDateTime targetEndTime = target.getEndTime();
 
@@ -147,7 +151,7 @@ public class Task {
         String[] parts = value.split(",");
 
         if (parts.length != 8)
-            throw new IllegalArgumentException("Неккоректный формат строки-задачи");
+            throw new IllegalArgumentException("Некоректный формат строки-задачи");
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Config.DATE_TIME_FORMAT);
 

@@ -1,6 +1,6 @@
+package model;
+
 import common.Config;
-import model.Task;
-import model.TaskStatus;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -51,6 +51,9 @@ public class TaskEntityTest {
     public void shouldDetectTimeIntersection() {
         Task taskWithTime = Task.fromString(serializedTaskWithTime);
         Task taskWithTime1 = Task.fromString(serializedTaskWithTime);
+
+        taskWithTime.setId(0);
+        taskWithTime1.setId(1);
 
         Task taskWithTime2 = Task.fromString(serializedTaskWithTime);
         taskWithTime2.setStartTime(taskWithTime1.getEndTime().plus(Duration.ofMinutes(10)));

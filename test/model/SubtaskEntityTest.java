@@ -1,6 +1,6 @@
+package model;
+
 import common.Config;
-import model.Subtask;
-import model.TaskStatus;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;

@@ -1,7 +1,8 @@
-package manager;
+package managers;
 
-import common.HistoryManager;
-import common.TaskManager;
+import managers.common.HistoryManager;
+import managers.common.NotFoundException;
+import managers.common.TaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -75,6 +76,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTaskById(int index) {
         Task task = tasks.get(index);
+
+        if (task == null)
+            throw new NotFoundException(String.format("Задача с ID: %s не найденна!", index));
+
         historyManager.add(task);
         return task;
     }
@@ -82,6 +87,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtaskById(int index) {
         Subtask subtask = subtasks.get(index);
+
+        if (subtask == null)
+            throw new NotFoundException(String.format("Подзадача с ID: %s не найденна!", index));
+
         historyManager.add(subtask);
         return subtask;
     }
@@ -89,6 +98,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpicById(int index) {
         Epic epic = epics.get(index);
+
+        if (epic == null)
+            throw new NotFoundException(String.format("Эпик с ID: %s не найден!", index));
+
         historyManager.add(epic);
         return epic;
     }
@@ -96,27 +109,35 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addTask(Task task) {
-        if (tasks.containsKey(task.getId())) {
-            throw new IllegalArgumentException("Задача с таким ID уже существует!");
-        }
+        if (tasks.containsKey(task.getId()))
+            throw new IllegalArgumentException(String.format("Задача с ID: %s уже существует!", task.getId()));
+
+        if (task.getId() == null)
+            task.setId(taskCounter);
 
         return setTask(task);
     }
 
     @Override
     public int addSubtask(Subtask subtask) {
-        if (subtasks.containsKey(subtask.getId())) {
-            throw new IllegalArgumentException("Подзадача с таким ID уже существует!");
-        }
+        if (subtasks.containsKey(subtask.getId()))
+            throw new IllegalArgumentException(
+                    String.format("Подзадача с ID: %s уже существует!", subtask.getId()));
+
+        if (subtask.getId() == null)
+            subtask.setId(taskCounter);
 
         return setSubtask(subtask);
     }
 
     @Override
     public int addEpic(Epic epic) {
-        if (epics.containsKey(epic.getId())) {
-            throw new IllegalArgumentException("Эпик с таким ID уже существует!");
-        }
+        if (epics.containsKey(epic.getId()))
+            throw new IllegalArgumentException(
+                    String.format("Эпик с ID: %s уже существует!", epic.getId()));
+
+        if (epic.getId() == null)
+            epic.setId(taskCounter);
 
         return setEpic(epic);
     }
@@ -131,7 +152,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (tasks.containsKey(task.getId())) {
             setTask(task);
         } else {
-            throw new IllegalArgumentException("Задача не найденна!");
+            throw new NotFoundException(String.format("Задача с ID: %s не найденна!", task.getId()));
         }
     }
 
@@ -144,7 +165,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtasks.containsKey(subtask.getId())) {
             setSubtask(subtask);
         } else {
-            throw new IllegalArgumentException("Подзадача не найденна!");
+            throw new NotFoundException(String.format("Подзадача с ID: %s не найденна!", subtask.getId()));
         }
     }
 
@@ -157,13 +178,16 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(epic.getId())) {
             setEpic(epic);
         } else {
-            throw new IllegalArgumentException("Эпик не найден!");
+            throw new NotFoundException(String.format("Эпик с ID: %s не найден!", epic.getId()));
         }
     }
 
 
     @Override
     public void removeTaskById(int id) {
+        if (!tasks.containsKey(id))
+            throw new NotFoundException(String.format("Задача с ID: %s не найдена!", id));
+
         tasks.remove(id);
         historyManager.remove(id);
     }
@@ -171,6 +195,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeSubtaskById(int id) {
         Subtask subtask = subtasks.get(id);
+
+        if (subtask == null)
+            throw new NotFoundException(String.format("Подзадача с ID: %s не найдена!", id));
+
         Epic epic = epics.get(subtask.getEpicId());
 
         if (epic != null) {
@@ -183,6 +211,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeEpicById(int id) {
+        if (!epics.containsKey(id))
+            throw new NotFoundException(String.format("Эпик с ID: %s не найден!", id));
+
         getEpicSubtasks(id).forEach(epicSubtask -> {
             subtasks.remove(epicSubtask.getId());
             historyManager.remove(epicSubtask.getId());
@@ -197,7 +228,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(id);
 
         if (epic == null) {
-            throw new IllegalArgumentException("Не найден эпик с заданным идентификатором: " + id);
+            throw new NotFoundException(String.format("Эпик с ID: %s не найден!", id));
         }
 
         return getAllSubtasks()
@@ -212,7 +243,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     protected int setTask(Task task) {
-        if (subtasks.values().stream().anyMatch(st -> Task.isExecutionTimeOverlap(task, st))) {
+        if (tasks.values().stream().anyMatch(st -> Task.isExecutionTimeOverlap(task, st))) {
             throw new IllegalArgumentException(String.format(
                 "Задача с таким временным диапазоном (%s - %s) уже существует!",
                 task.getStartTime(), task.getEndTime()
